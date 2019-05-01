@@ -20,9 +20,10 @@ public class Main
 		{
 			System.out.println("Round " + round++);
 			singleRound();
+			//todo add status quo message
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(10000);
 			}
 			catch (Exception e)
 			{
@@ -34,8 +35,8 @@ public class Main
 
 	private static void singleRound()
 	{
-		//		Player attackingPlayer = players.get(random.nextInt(players.size()));
-		Player attackingPlayer = players.get(0);
+		Player attackingPlayer = players.get(random.nextInt(players.size()));
+		//		Player attackingPlayer = players.get(0);
 
 		String attackedCountryName;
 		ArrayList<String> landBorders = attackingPlayer.getLandBorders();
@@ -95,14 +96,18 @@ public class Main
 		return newList;
 	}
 
-	private static Country findAttackingCountry(ArrayList<Country> countries, Country attackedCountry)
-	{//todo add option over sea
+	private static Country findAttackingCountry(ArrayList<Country> attackersCountries, Country attackedCountry)
+	{
 		ArrayList<Country> possibleAttackers = new ArrayList<>();
-		for (Country country : countries)
-			if (country.contains(attackedCountry.getName()))
-				possibleAttackers.add(country);
 
-		//		for (String waterGroup : attackedCountry)
+		for (Country attackerCountry : attackersCountries)
+			if (attackerCountry.containsLandBorder(attackedCountry.getName()))
+				possibleAttackers.add(attackerCountry);
+
+		for (String waterGroup : attackedCountry.getWaterGroups())
+			for (Country attackerCountry : attackersCountries)
+				if (attackerCountry.containsWaterGroup(waterGroup))
+					possibleAttackers.add(attackerCountry);
 
 		return possibleAttackers.get(random.nextInt(possibleAttackers.size()));
 	}

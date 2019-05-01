@@ -28,10 +28,18 @@ class Country
 		return waterGroups;
 	}
 
-	boolean contains(String searchedBorder)
+	boolean containsLandBorder(String searchedBorder)
 	{
 		for (String border : landBorders)
 			if (border.equals(searchedBorder))
+				return true;
+		return false;
+	}
+
+	boolean containsWaterGroup(String searchedWaterGroup)
+	{
+		for (String waterGroup : waterGroups)
+			if (waterGroup.equals(searchedWaterGroup))
 				return true;
 		return false;
 	}

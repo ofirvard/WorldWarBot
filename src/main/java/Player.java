@@ -84,12 +84,12 @@ class Player
 	}
 
 	private ArrayList<String> removeOwnedBorders(ArrayList<String> borders)
-	{
+	{//todo check if this works
 		//		ArrayList<String> newBordersList = new ArrayList<>();
 		//		ArrayList<String> countriesNames = getCountriesNames();
 		//
 		//		for (String border : borders)
-		//			if (!countriesNames.contains(border))
+		//			if (!countriesNames.containsLandBorder(border))
 		//				newBordersList.add(border);
 		//
 		//		return newBordersList;
