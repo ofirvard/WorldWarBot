@@ -1,12 +1,13 @@
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Game implements Runnable
+public class Game
 {
     private Random random = new Random();
     private ArrayList<Player> players;
     private ArrayList<WaterGroup> waterGroups;
-    private ArrayList<String> movesHistory;
+    private ArrayList<String> movesHistory = new ArrayList<>();
+    private int roundNumber = 1;
 
     Game(ArrayList<Player> players, ArrayList<WaterGroup> waterGroups)
     {
@@ -14,7 +15,7 @@ public class Game implements Runnable
         this.waterGroups = waterGroups;
     }
 
-    public void run()
+    public void main()
     {
         int round = 1;
         while (players.size() > 1)
@@ -33,10 +34,11 @@ public class Game implements Runnable
         System.out.println(players.get(0) + " has won!!!");
     }
 
-    private void singleRound()
+    void singleRound()
     {
+        String move = "Round " + roundNumber++;
+
         Player attackingPlayer = players.get(random.nextInt(players.size()));
-        String move = "";
 
         String attackedCountryName;
         ArrayList<String> landBorders = attackingPlayer.getLandBorders();
@@ -57,11 +59,11 @@ public class Game implements Runnable
         Country attackingCountry = findAttackingCountry(attackingPlayer.getCountries(), attackedCountry);
 
         // now to flip a coin
-        System.out.println(attackingCountry + "(" + attackingPlayer + ") has attacked " + attackedCountry + "(" + attackedPlayer + ")");
+        move += "\n" + attackingCountry + "(" + attackingPlayer + ") has attacked " + attackedCountry + "(" + attackedPlayer + ")";
 
         if (random.nextBoolean())
         {
-            move = attackingCountry + "(" + attackingPlayer + ")" + " has won and conquered " + attackedCountry + " from " + attackedPlayer;
+            move += "\n" + attackingCountry + "(" + attackingPlayer + ")" + " has won and conquered " + attackedCountry + " from " + attackedPlayer;
 
             attackingPlayer.addCountry(attackedCountry);
             attackedPlayer.removeCountry(attackedCountry);
@@ -73,7 +75,7 @@ public class Game implements Runnable
         }
         else
         {
-            move = attackedCountry + "(" + attackedPlayer + ")" + " has won and conquered " + attackingCountry + " from " + attackingPlayer;
+            move += "\n" + attackedCountry + "(" + attackedPlayer + ")" + " has won and conquered " + attackingCountry + " from " + attackingPlayer;
 
             attackedPlayer.addCountry(attackingCountry);
             attackingPlayer.removeCountry(attackingCountry);
@@ -84,6 +86,8 @@ public class Game implements Runnable
             }
         }
         //this is the end of a single round
+        if (players.size() == 1)
+            move += "\n" + players.get(0) + " has won!";
         System.out.println(move);
         movesHistory.add(move);
     }
@@ -112,5 +116,20 @@ public class Game implements Runnable
                 return player;
 
         return null;
+    }
+
+    String getLastMove()
+    {
+        return movesHistory.get(movesHistory.size() - 1);
+    }
+
+    String getAllMoves()
+    {
+        return movesHistory.toString();
+    }
+
+    int getNumberOfPlayers()
+    {
+        return players.size();
     }
 }
