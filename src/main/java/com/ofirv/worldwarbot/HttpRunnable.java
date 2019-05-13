@@ -1,4 +1,4 @@
-package worldwarbot;
+package com.ofirv.worldwarbot;
 
 import com.sun.net.httpserver.HttpContext;
 import com.sun.net.httpserver.HttpExchange;

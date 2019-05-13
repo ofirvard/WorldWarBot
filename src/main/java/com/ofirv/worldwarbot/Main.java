@@ -1,4 +1,4 @@
-package worldwarbot;
+package com.ofirv.worldwarbot;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ public class Main
     {
         setupGame();
         doAnotherRound();
-//        Thread gameThread = new Thread(new worldwarbot.GameRunnable(game));
+//        Thread gameThread = new Thread(new GameRunnable(game));
 //        gameThread.start();
 //        System.out.println("game is running");
 

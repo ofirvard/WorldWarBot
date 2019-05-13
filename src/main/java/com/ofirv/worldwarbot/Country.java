@@ -1,4 +1,4 @@
-package worldwarbot;
+package com.ofirv.worldwarbot;
 
 class Country
 {

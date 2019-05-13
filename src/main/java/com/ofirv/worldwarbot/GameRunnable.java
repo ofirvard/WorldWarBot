@@ -1,4 +1,4 @@
-package worldwarbot;
+package com.ofirv.worldwarbot;
 
 public class GameRunnable implements Runnable
 {

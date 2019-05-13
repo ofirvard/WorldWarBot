@@ -1,4 +1,4 @@
-package worldwarbot;
+package com.ofirv.worldwarbot;
 
 import java.util.ArrayList;
 import java.util.Arrays;

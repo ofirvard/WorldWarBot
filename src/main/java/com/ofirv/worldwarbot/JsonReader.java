@@ -1,4 +1,4 @@
-package worldwarbot;
+package com.ofirv.worldwarbot;
 
 import com.google.gson.Gson;
 
@@ -32,9 +32,9 @@ public class JsonReader
     private static String read(String fileName, Charset charset) throws IOException
     {
         StringBuilder returnString = new StringBuilder();
-        String line;
         try (InputStreamReader inputStreamReader = new InputStreamReader(new FileInputStream(fileName), charset); BufferedReader bufferedReader = new BufferedReader(inputStreamReader))
         {
+            String line;
             while ((line = bufferedReader.readLine()) != null)
             {
                 returnString.append("\n");
@@ -45,14 +45,24 @@ public class JsonReader
 
     private static String readFromResource(Class classPath, String resource, Charset charset) throws IOException
     {
-        URL url = classPath.getResource(resource);
-        try
+        InputStream is = classPath.getResourceAsStream("/" + resource);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String line, retrunString = "";
+        while ((line = reader.readLine()) != null)
         {
-            return com.google.common.io.Resources.toString(url, charset);
+            retrunString += line;
         }
-        catch (NullPointerException e)
-        {
-            throw new FileNotFoundException(MessageFormat.format("{0}/{1} (no such resource or directory", classPath.getName(), resource));
-        }
+
+        return retrunString;
+
+//        URL url = classPath.getResource(resource);
+//        try
+//        {
+//            return com.google.common.io.Resources.toString(url, charset);
+//        }
+//        catch (NullPointerException e)
+//        {
+//            throw new FileNotFoundException(MessageFormat.format("{0}/{1} (no such resource or directory", classPath.getName(), resource));
+//        }
     }
 }
