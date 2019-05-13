@@ -1,3 +1,5 @@
+package worldwarbot;
+
 public class GameRunnable implements Runnable
 {
     Game game;

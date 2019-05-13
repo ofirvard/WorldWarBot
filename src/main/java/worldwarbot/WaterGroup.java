@@ -1,3 +1,5 @@
+package worldwarbot;
+
 import java.util.ArrayList;
 
 public class WaterGroup

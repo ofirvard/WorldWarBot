@@ -1,3 +1,4 @@
+package worldwarbot;
 
 class Country
 {
