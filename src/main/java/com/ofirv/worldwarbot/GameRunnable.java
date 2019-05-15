@@ -18,7 +18,7 @@ public class GameRunnable implements Runnable
             {
                 Thread.sleep(10000);
             }
-            catch (Exception e)
+            catch (InterruptedException e)
             {
                 e.printStackTrace();
             }

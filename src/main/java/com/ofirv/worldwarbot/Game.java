@@ -1,137 +1,121 @@
 package com.ofirv.worldwarbot;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Game
 {
-    private Random random = new Random();
-    private ArrayList<Player> players;
-    private ArrayList<WaterGroup> waterGroups;
-    private ArrayList<String> movesHistory = new ArrayList<>();
-    private int roundNumber = 1;
+	private Random random = new Random();
+	private List<Player> players;
+	private List<WaterGroup> waterGroups;
+	private List<String> movesHistory = new ArrayList<>();
+	private int roundNumber = 1;
 
-    Game(ArrayList<Player> players, ArrayList<WaterGroup> waterGroups)
-    {
-        this.players = players;
-        this.waterGroups = waterGroups;
-    }
+	Game(ArrayList<Player> players, ArrayList<WaterGroup> waterGroups)
+	{
+		this.players = players;
+		this.waterGroups = waterGroups;
+	}
 
-    public void main()
-    {
-        int round = 1;
-        while (players.size() > 1)
-        {
-            System.out.println("Round " + round++);
-            singleRound();
-            try
-            {
-                Thread.sleep(10000);
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-        }
-        System.out.println(players.get(0) + " has won!!!");
-    }
+	public void main()
+	{
+		int round = 1;
+		while (players.size() > 1)
+		{
+			System.out.println("Round " + round++);
+			singleRound();
+			try
+			{
+				Thread.sleep(10000);
+			}
+			catch (Exception e)
+			{
+				e.printStackTrace();
+			}
+		}
+		System.out.println(players.get(0) + " has won!!!");
+	}
 
-    void singleRound()
-    {
-        String move = "Round " + roundNumber++;
+	void singleRound()
+	{
+		String move = "Round " + roundNumber++;
 
-        Player attackingPlayer = players.get(random.nextInt(players.size()));
+		// which country will attack
+		Player attackingPlayer = players.get(random.nextInt(players.size()));
 
-        String attackedCountryName;
-        ArrayList<String> landBorders = attackingPlayer.getLandBorders();
-        ArrayList<String> waterBorders = attackingPlayer.getWaterBorders(waterGroups);
-        if (landBorders.isEmpty() || (!waterBorders.isEmpty() && random.nextInt(4) == 0))
-        {
-            attackedCountryName = waterBorders.get(random.nextInt(waterBorders.size()));
-        }
-        else
-        {
-            attackedCountryName = landBorders.get(random.nextInt(landBorders.size()));
-        }
+		// who it will attack
+		String attackedCountryName = getAttackedCountryName(attackingPlayer.getLandBorders(), attackingPlayer.getWaterBorders(waterGroups));
+		Player attackedPlayer = findAttackedPlayer(attackedCountryName);
+		Country attackedCountry = attackedPlayer.getCountry(attackedCountryName);
 
-        Player attackedPlayer = findAttackedPlayer(attackedCountryName);
-        Country attackedCountry = attackedPlayer.getCountry(attackedCountryName);
+		// now we find out who can conquer it
+		Country attackingCountry = findAttackingCountry(attackingPlayer.getCountries(), attackedCountry);
 
-        // now we find out who can conquer it
-        Country attackingCountry = findAttackingCountry(attackingPlayer.getCountries(), attackedCountry);
+		// now to flip a coin
+		move += String.format("\n%s(%s) has attacked %s(%s)", attackingCountry, attackingPlayer, attackedCountry, attackedPlayer);
 
-        // now to flip a coin
-        move += "\n" + attackingCountry + "(" + attackingPlayer + ") has attacked " + attackedCountry + "(" + attackedPlayer + ")";
+		if (random.nextBoolean())
+			landTransfer(attackingPlayer, attackingCountry, attackedPlayer, attackedCountry, move);
+		else
+			landTransfer(attackedPlayer, attackedCountry, attackingPlayer, attackingCountry, move);
 
-        if (random.nextBoolean())
-        {
-            move += "\n" + attackingCountry + "(" + attackingPlayer + ")" + " has won and conquered " + attackedCountry + " from " + attackedPlayer;
+		//this is the end of a single round
+		if (players.size() == 1)
+			move += String.format("\n%s has won!", players.get(0));
+		System.out.println(move);
+		movesHistory.add(move);
+	}
 
-            attackingPlayer.addCountry(attackedCountry);
-            attackedPlayer.removeCountry(attackedCountry);
-            if (attackedPlayer.getCountries().size() == 0)
-            {
-                players.remove(attackedPlayer);
-                move += "\n" + attackedPlayer + " has lost all it's countries and is out of the game";
-            }
-        }
-        else
-        {
-            move += "\n" + attackedCountry + "(" + attackedPlayer + ")" + " has won and conquered " + attackingCountry + " from " + attackingPlayer;
+	private void landTransfer(Player conqueringPlayer, Country conqueringCountry, Player conqueredPlayer, Country conqueredCountry, String move)
+	{
+		move += String.format("\n%s(%s) has won and conquered %s from %s", conqueringCountry, conqueringPlayer, conqueredCountry, conqueredPlayer);
 
-            attackedPlayer.addCountry(attackingCountry);
-            attackingPlayer.removeCountry(attackingCountry);
-            if (attackingPlayer.getCountries().size() == 0)
-            {
-                players.remove(attackingPlayer);
-                move += "\n" + attackingPlayer + " has lost all it's countries and is out of the game";
-            }
-        }
-        //this is the end of a single round
-        if (players.size() == 1)
-            move += "\n" + players.get(0) + " has won!";
-        System.out.println(move);
-        movesHistory.add(move);
-    }
+		conqueringPlayer.addCountry(conqueredCountry);
+		conqueredPlayer.removeCountry(conqueredCountry);
+		if (conqueredPlayer.getCountries().size() == 0)
+		{
+			players.remove(conqueredPlayer);
+			move += String.format("\n%s has lost all it's countries and is out of the game", conqueredPlayer);
+		}
+	}
 
+	private String getAttackedCountryName(ArrayList<String> landBorders, ArrayList<String> waterBorders)
+	{
+		if (landBorders.isEmpty() || (!waterBorders.isEmpty() && random.nextInt(4) == 0))
+			return waterBorders.get(random.nextInt(waterBorders.size()));
+		else
+			return landBorders.get(random.nextInt(landBorders.size()));
+	}
 
-    private Country findAttackingCountry(ArrayList<Country> attackersCountries, Country attackedCountry)
-    {
-        ArrayList<Country> possibleAttackers = new ArrayList<>();
+	private Country findAttackingCountry(ArrayList<Country> attackersCountries, Country attackedCountry)
+	{
+		ArrayList<Country> possibleAttackers = new ArrayList<>();
 
-        for (Country attackerCountry : attackersCountries)
-            if (attackerCountry.containsLandBorder(attackedCountry.getName()))
-                possibleAttackers.add(attackerCountry);
+		attackersCountries.stream().filter(t -> t.containsLandBorder(attackedCountry.getName())).forEach(possibleAttackers::add);
 
-        for (String waterGroup : attackedCountry.getWaterGroups())
-            for (Country attackerCountry : attackersCountries)
-                if (attackerCountry.containsWaterGroup(waterGroup))
-                    possibleAttackers.add(attackerCountry);
+		attackedCountry.getWaterGroups().forEach(waterGroup -> attackersCountries.stream().filter(t -> t.containsWaterGroup(waterGroup)).forEach(possibleAttackers::add));
 
-        return possibleAttackers.get(random.nextInt(possibleAttackers.size()));
-    }
+		return possibleAttackers.get(random.nextInt(possibleAttackers.size()));
+	}
 
-    private Player findAttackedPlayer(String attackedCountry)
-    {
-        for (Player player : players)
-            if (player.getCountriesNames().contains(attackedCountry))
-                return player;
+	private Player findAttackedPlayer(String attackedCountry)
+	{
+		return players.stream().filter(t -> t.getCountriesNames().contains(attackedCountry)).findFirst().orElse(null);
+	}
 
-        return null;
-    }
+	String getLastMove()
+	{
+		return movesHistory.get(movesHistory.size() - 1);
+	}
 
-    String getLastMove()
-    {
-        return movesHistory.get(movesHistory.size() - 1);
-    }
+	String getAllMoves()
+	{
+		return movesHistory.toString();
+	}
 
-    String getAllMoves()
-    {
-        return movesHistory.toString();
-    }
-
-    int getNumberOfPlayers()
-    {
-        return players.size();
-    }
+	int getNumberOfPlayers()
+	{
+		return players.size();
+	}
 }

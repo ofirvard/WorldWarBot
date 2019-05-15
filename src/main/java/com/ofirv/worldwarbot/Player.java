@@ -1,93 +1,87 @@
 package com.ofirv.worldwarbot;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 class Player
 {
-    private String name;
-    private ArrayList<Country> countries;
+	private String name;
+	private List<Country> countries;
 
-    Player(String name)
-    {
-        this.name = name;
-        this.countries = new ArrayList<>();
-    }
+	Player(String name)
+	{
+		this.name = name;
+		this.countries = new ArrayList<>();
+	}
 
-    ArrayList<Country> getCountries()
-    {
-        return this.countries;
-    }
+	List<Country> getCountries()
+	{
+		return this.countries;
+	}
 
-    Country getCountry(String countryName)
-    {
-        for (Country country : this.countries)
-            if (country.getName().equals(countryName))
-                return country;
+	Country getCountry(String countryName)
+	{
+		for (Country country : this.countries)
+			if (country.getName().equals(countryName))
+				return country;
 
-        return null;
-    }
+		return null;
+	}
 
-    void removeCountry(Country country)
-    {
-        this.countries.remove(country);
-    }
+	void removeCountry(Country country)
+	{
+		this.countries.remove(country);
+	}
 
-    void addCountry(Country country)
-    {
-        this.countries.add(country);
-    }
+	void addCountry(Country country)
+	{
+		this.countries.add(country);
+	}
 
-    ArrayList<String> getCountriesNames()
-    {
-        ArrayList<String> countriesNames = new ArrayList<>();
-        for (Country country : this.countries)
-            countriesNames.add(country.getName());
+	List<String> getCountriesNames()
+	{
+		ArrayList<String> countriesNames = new ArrayList<>();
+		for (Country country : this.countries)
+			countriesNames.add(country.getName());
 
-        return countriesNames;
-    }
+		return countriesNames;
+	}
 
-    private ArrayList<String> getWaterGroups()
-    {
-        ArrayList<String> waterGroups = new ArrayList<>();
+	private List<String> getWaterGroups()
+	{
+		ArrayList<String> waterGroups = new ArrayList<>();
 
-        for (Country country : this.countries)
-            waterGroups.addAll(Arrays.asList(country.getWaterGroups()));
+		for (Country country : this.countries)
+			waterGroups.addAll(country.getWaterGroups());
 
-        return waterGroups;
-    }
+		return waterGroups;
+	}
 
-    ArrayList<String> getWaterBorders(ArrayList<WaterGroup> waterGroups)
-    {
-        ArrayList<String> waterBorders = new ArrayList<>();
-        ArrayList<String> playerWaterGroups = getWaterGroups();
+	List<String> getWaterBorders(List<WaterGroup> waterGroups)
+	{
+		List<String> waterBorders = waterGroups.stream().filter(t -> getWaterGroups().contains(t.getName())).map(WaterGroup::getCountriesNames).flatMap(Collection::stream)
+				.collect(Collectors.toList());
 
-        for (WaterGroup waterGroup : waterGroups)
-            if (playerWaterGroups.contains(waterGroup.getName()))
-                waterBorders.addAll(waterGroup.getCountriesNames());
+		return removeOwnedBorders(waterBorders);
+	}
 
-        return removeOwnedBorders(waterBorders);
-    }
+	List<String> getLandBorders()
+	{
+		List<String> landBorders = this.countries.stream().flatMap(t -> t.getLandBorders().stream()).collect(Collectors.toList());
 
-    ArrayList<String> getLandBorders()
-    {
-        ArrayList<String> landBorders = new ArrayList<>();
+		return removeOwnedBorders(landBorders);
+	}
 
-        for (Country country : this.countries)
-            landBorders.addAll(Arrays.asList(country.getLandBorders()));
+	private List<String> removeOwnedBorders(List<String> borders)
+	{
+		borders.removeAll(getCountriesNames());
+		return borders;
+	}
 
-        return removeOwnedBorders(landBorders);
-    }
-
-    private ArrayList<String> removeOwnedBorders(ArrayList<String> borders)
-    {
-        borders.removeAll(getCountriesNames());
-        return borders;
-    }
-
-    @Override
-    public String toString()
-    {
-        return this.name;
-    }
+	@Override public String toString()
+	{
+		return this.name;
+	}
 }
