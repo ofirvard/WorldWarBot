@@ -1,11 +1,12 @@
 package com.ofirv.worldwarbot;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Main
 {
-	private static ArrayList<Player> players;
-	private static ArrayList<WaterGroup> waterGroups = new ArrayList<>();
+	private static List<Player> players;
+	private static List<WaterGroup> waterGroups = new ArrayList<>();
 	private static Game game;
 
 	public static void main(String[] args)
@@ -35,13 +36,13 @@ public class Main
 
 	private static void createWaterGroups()
 	{
-		ArrayList<Country> allCountries = new ArrayList<>();
+		List<Country> allCountries = new ArrayList<>();
 		for (Player player : players)
 			allCountries.addAll(player.getCountries());
 
 		for (Country country : allCountries)
 		{
-			for (String waterGroupName : country.getWaterGroups())
+			for (String waterGroupName : country.getWaterGroupsNames())
 				addToWaterGroup(country, waterGroupName);
 		}
 	}

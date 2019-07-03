@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 public class WaterGroup
 {
 	private String name;
-	private ArrayList<Country> countries = new ArrayList<>();
+	private List<Country> countries = new ArrayList<>();
 
 	WaterGroup(String name, Country country)
 	{

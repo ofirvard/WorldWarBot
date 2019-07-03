@@ -4,15 +4,11 @@
     "countries": [
       {
         "name": "Israel",
-        "landBorders": [
+        "borders": [
           "Lebanon",
           "Syria",
           "Jordan",
           "Egypt"
-        ],
-        "waterGroupsNames": [
-          "Mediterranean Sea",
-          "Red Sea"
         ]
       }
     ]
@@ -22,12 +18,10 @@
     "countries": [
       {
         "name": "Lebanon",
-        "landBorders": [
+        "borders": [
           "Syria",
-          "Israel"
-        ],
-        "waterGroupsNames": [
-          "Mediterranean Sea"
+          "Israel",
+          "Egypt"
         ]
       }
     ]
@@ -37,13 +31,11 @@
     "countries": [
       {
         "name": "Syria",
-        "landBorders": [
+        "borders": [
           "Lebanon",
           "Israel",
-          "Jordan"
-        ],
-        "waterGroupsNames": [
-          "Mediterranean Sea"
+          "Jordan",
+          "Egypt"
         ]
       }
     ]
@@ -53,12 +45,10 @@
     "countries": [
       {
         "name": "Jordan",
-        "landBorders": [
+        "borders": [
           "Syria",
-          "Israel"
-        ],
-        "waterGroupsNames": [
-          "Red Sea"
+          "Israel",
+          "Egypt"
         ]
       }
     ]
@@ -68,12 +58,11 @@
     "countries": [
       {
         "name": "Egypt",
-        "landBorders": [
-          "Israel"
-        ],
-        "waterGroupsNames": [
-          "Mediterranean Sea",
-          "Red Sea"
+        "borders": [
+          "Israel",
+          "Lebanon",
+          "Syria",
+          "Jordan"
         ]
       }
     ]

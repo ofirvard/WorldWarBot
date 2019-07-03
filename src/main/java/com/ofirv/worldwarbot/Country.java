@@ -1,53 +1,80 @@
 package com.ofirv.worldwarbot;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 class Country
 {
-	private String name;
-	private ArrayList<String> landBorders;
-	private ArrayList<String> waterGroups;
+    private String name;
+    private List<String> landBorders;
+    private List<String> waterGroupsNames;
 
-	Country(String name, ArrayList<String> landBorders, ArrayList<String> waterGroups)
-	{
-		this.name = name;
-		this.landBorders = landBorders;
-		this.waterGroups = waterGroups;
-	}
+    Country(String name, List<String> landBorders, List<String> waterGroupsNames)
+    {
+        this.name = name;
+        this.landBorders = landBorders;
+        this.waterGroupsNames = waterGroupsNames;
+    }
 
-	String getName()
-	{
-		return name;
-	}
+    String getName()
+    {
+        return name;
+    }
 
-	ArrayList<String> getLandBorders()
-	{
-		return landBorders;
-	}
+    List<String> getLandBorders()
+    {
+        return landBorders;
+    }
 
-	ArrayList<String> getWaterGroups()
-	{
-		return waterGroups;
-	}
+    List<String> getWaterGroupsNames()
+    {
+        return waterGroupsNames;
+    }
 
-	boolean containsLandBorder(String searchedBorder)
-	{
-		for (String border : landBorders)
-			if (border.equals(searchedBorder))
-				return true;
-		return false;
-	}
+    List<String> getWaterBorders(List<WaterGroup> waterGroups)
+    {
+        List<String> waterBorders = new ArrayList<>();
+        for (WaterGroup waterGroup : waterGroups)
+            if (waterGroupsNames.contains(waterGroup.getName()))
+                waterBorders.addAll(waterGroup.getCountriesNames());
 
-	boolean containsWaterGroup(String searchedWaterGroup)
-	{
-		for (String waterGroup : waterGroups)
-			if (waterGroup.equals(searchedWaterGroup))
-				return true;
-		return false;
-	}
+        return waterBorders;
+    }
 
-	@Override public String toString()
-	{
-		return this.name;
-	}
+    List<String> getBorders(List<WaterGroup> waterGroups)
+    {
+        List<String> borders = new ArrayList();
+        borders.addAll(landBorders);
+        borders.addAll(getWaterBorders(waterGroups));
+        borders = borders.stream().distinct().collect(Collectors.toList());
+        borders.remove(name);
+
+        return borders;
+    }
+
+
+    boolean containsLandBorder(String searchedBorder)
+    {
+        for (String border : landBorders)
+            if (border.equals(searchedBorder))
+                return true;
+        return false;
+    }
+
+    boolean containsWaterGroup(String searchedWaterGroup)
+    {
+        for (String waterGroup : waterGroupsNames)
+            if (waterGroup.equals(searchedWaterGroup))
+                return true;
+        return false;
+    }
+
+    @Override
+    public String toString()
+    {
+        return this.name;
+    }
 }

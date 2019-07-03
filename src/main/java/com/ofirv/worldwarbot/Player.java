@@ -42,7 +42,7 @@ class Player
 
 	List<String> getCountriesNames()
 	{
-		ArrayList<String> countriesNames = new ArrayList<>();
+		List<String> countriesNames = new ArrayList<>();
 		for (Country country : this.countries)
 			countriesNames.add(country.getName());
 
@@ -51,10 +51,10 @@ class Player
 
 	private List<String> getWaterGroups()
 	{
-		ArrayList<String> waterGroups = new ArrayList<>();
+		List<String> waterGroups = new ArrayList<>();
 
 		for (Country country : this.countries)
-			waterGroups.addAll(country.getWaterGroups());
+			waterGroups.addAll(country.getWaterGroupsNames());
 
 		return waterGroups;
 	}
@@ -78,6 +78,11 @@ class Player
 	{
 		borders.removeAll(getCountriesNames());
 		return borders;
+	}
+
+	public String getName()
+	{
+		return name;
 	}
 
 	@Override public String toString()

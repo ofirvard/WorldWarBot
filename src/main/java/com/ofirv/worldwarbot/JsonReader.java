@@ -8,12 +8,13 @@ import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class JsonReader
 {
-    static ArrayList<Player> createPlayers()
+    static List<Player> createPlayers()
     {
-        ArrayList<Player> players = new ArrayList<Player>();
+        List<Player> players = new ArrayList<>();
         Gson gson = new Gson();
         try
         {

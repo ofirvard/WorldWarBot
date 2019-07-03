@@ -12,7 +12,7 @@ public class Game
 	private List<String> movesHistory = new ArrayList<>();
 	private int roundNumber = 1;
 
-	Game(ArrayList<Player> players, ArrayList<WaterGroup> waterGroups)
+	Game(List<Player> players, List<WaterGroup> waterGroups)
 	{
 		this.players = players;
 		this.waterGroups = waterGroups;
@@ -80,7 +80,7 @@ public class Game
 		}
 	}
 
-	private String getAttackedCountryName(ArrayList<String> landBorders, ArrayList<String> waterBorders)
+	private String getAttackedCountryName(List<String> landBorders, List<String> waterBorders)
 	{
 		if (landBorders.isEmpty() || (!waterBorders.isEmpty() && random.nextInt(4) == 0))
 			return waterBorders.get(random.nextInt(waterBorders.size()));
@@ -88,13 +88,13 @@ public class Game
 			return landBorders.get(random.nextInt(landBorders.size()));
 	}
 
-	private Country findAttackingCountry(ArrayList<Country> attackersCountries, Country attackedCountry)
+	private Country findAttackingCountry(List<Country> attackersCountries, Country attackedCountry)
 	{
-		ArrayList<Country> possibleAttackers = new ArrayList<>();
+		List<Country> possibleAttackers = new ArrayList<>();
 
 		attackersCountries.stream().filter(t -> t.containsLandBorder(attackedCountry.getName())).forEach(possibleAttackers::add);
 
-		attackedCountry.getWaterGroups().forEach(waterGroup -> attackersCountries.stream().filter(t -> t.containsWaterGroup(waterGroup)).forEach(possibleAttackers::add));
+		attackedCountry.getWaterGroupsNames().forEach(waterGroup -> attackersCountries.stream().filter(t -> t.containsWaterGroup(waterGroup)).forEach(possibleAttackers::add));
 
 		return possibleAttackers.get(random.nextInt(possibleAttackers.size()));
 	}
